@@ -23,6 +23,8 @@ module.exports = {
         "allowTemplateLiterals": true
       }
     ],
+    'arrow-body-style': 'off',
+    'no-shadow': 'off',
     'object-curly-newline': 'off',
     'semi': 'off',
     'max-len': 'off',

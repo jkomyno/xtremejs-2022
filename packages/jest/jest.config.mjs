@@ -13,10 +13,13 @@ export const baseConfig = {
   testMatch: [
     `${testRoot}/**/${singleTestMatch}`,
   ],
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.json',
-    },
+  transform: {
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.json',
+      },
+    ],
   },
   rootDir: `../${process.env.JEST_LIB_UNDER_TEST}`,
   setupFiles: [
