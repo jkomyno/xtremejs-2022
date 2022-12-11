@@ -12,11 +12,10 @@ async function main() {
     },
   })
 
-  const service = interpret(glassdoorScraperMachine)
-    .onTransition((state) => {
-      console.log('Transitioning to ', state.value)
-      console.log('  context', state.context.kind)
-    })
+  const service = interpret(glassdoorScraperMachine).onTransition((state) => {
+    console.log('Transitioning to ', state.value)
+    console.log('  context', state.context.kind)
+  })
   const actor = service.start()
 
   const chronoStart = process.hrtime.bigint()
@@ -44,20 +43,26 @@ async function main() {
   console.log('finalState.value', finalState.value)
 
   const ctx = match(finalState)
-    .when((state) => state.value === 'success', (state) => {
-      console.log('SUCCESS final state')
-      const ctx = state.context as ContextFromState<'success'>
+    .when(
+      (state) => state.value === 'success',
+      (state) => {
+        console.log('SUCCESS final state')
+        const ctx = state.context as ContextFromState<'success'>
 
-      const { browser: _, ...rest } = ctx
-      console.log('  context', rest)
+        const { browser: _, ...rest } = ctx
+        console.log('  context', rest)
 
-      return ctx
-    })
-    .when((state) => state.value === 'failure', (state) => {
-      console.log('FAILURE final state')
-      const ctx = state.context as ContextFromState<'failure'>
-      return ctx
-    })
+        return ctx
+      },
+    )
+    .when(
+      (state) => state.value === 'failure',
+      (state) => {
+        console.log('FAILURE final state')
+        const ctx = state.context as ContextFromState<'failure'>
+        return ctx
+      },
+    )
     .otherwise((state) => {
       console.log('UNKNOWN final state')
       const ctx = state.context as ContextFromState<'authenticate'>
@@ -71,8 +76,7 @@ async function main() {
   actor.stop()
 }
 
-main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

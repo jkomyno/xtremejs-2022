@@ -122,57 +122,60 @@ export type ScraperTypestate =
 
   /* Final state that indicates the overall scraping pipeline was interrupted by some error */
   | {
-    value: 'failure'
-    context: ScraperContext & {
-      browser: PlaywrightBrowserData
-      reason: string
+      value: 'failure'
+      context: ScraperContext & {
+        browser: PlaywrightBrowserData
+        reason: string
+      }
     }
-  }
 
 /**
  * Given a valid state value, returns the context type for that state.
  */
-export type ContextFromState<StateValue extends ScraperTypestate['value']> = Extract<ScraperTypestate, { value: StateValue }>['context']
+export type ContextFromState<StateValue extends ScraperTypestate['value']> = Extract<
+  ScraperTypestate,
+  { value: StateValue }
+>['context']
 
 /**
  * The events that can be sent to the state machine.
  */
 export type ScraperEvent =
   | {
-    type: 'START',
-    auth: UserAuth
-  }
+      type: 'START'
+      auth: UserAuth
+    }
   | {
-    type: 'done.invoke.scraper.init-browser:invocation[0]',
-    data: PlaywrightBrowserData,
-  }
+      type: 'done.invoke.scraper.init-browser:invocation[0]'
+      data: PlaywrightBrowserData
+    }
   | {
-    type: 'FAIL_INIT_BROWSER',
-  }
+      type: 'FAIL_INIT_BROWSER'
+    }
   | {
-    type: 'done.invoke.scraper.authenticate:invocation[0]',
-  }
+      type: 'done.invoke.scraper.authenticate:invocation[0]'
+    }
   | {
-    type: 'FAIL_AUTHENTICATING',
-  }
+      type: 'FAIL_AUTHENTICATING'
+    }
   | {
-    type: 'done.invoke.scraper.authenticated.scrape-user-data.retrieve-user-data:invocation[0]',
-    data: { userData: UserData },
-  }
+      type: 'done.invoke.scraper.authenticated.scrape-user-data.retrieve-user-data:invocation[0]'
+      data: { userData: UserData }
+    }
   | {
-    type: 'FAIL_RETRIEVING_USER_DATA',
-  }
+      type: 'FAIL_RETRIEVING_USER_DATA'
+    }
   | {
-    type: 'done.invoke.scraper.authenticated.scrape-resumes.retrieve-resumes:invocation[0]',
-    data: { resumeReadables: Readable[] },
-  }
+      type: 'done.invoke.scraper.authenticated.scrape-resumes.retrieve-resumes:invocation[0]'
+      data: { resumeReadables: Readable[] }
+    }
   | {
-    type: 'FAIL_RETRIEVING_RESUMES',
-  }
+      type: 'FAIL_RETRIEVING_RESUMES'
+    }
   | {
-    type: 'done.invoke.scraper.authenticated.scrape-resumes.store-resumes:invocation[0]',
-    data: { resumeURLs: string[] },
-  }
+      type: 'done.invoke.scraper.authenticated.scrape-resumes.store-resumes:invocation[0]'
+      data: { resumeURLs: string[] }
+    }
   | {
-    type: 'FAIL_STORING_RESUMES',
-  }
+      type: 'FAIL_STORING_RESUMES'
+    }

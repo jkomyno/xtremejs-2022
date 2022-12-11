@@ -55,7 +55,7 @@ export async function authenticate(ctx: ContextFromState<'authenticate'>) {
   await Promise.all([
     loginPage.waitForNavigation({ timeout: PLAYWRIGHT_TIMEOUT }),
     loginPage.locator('form[name="authEmailForm"] button[type="submit"]').click(),
-  ]);
+  ])
 
   const isPasswordIncorrect = await loginPage.isVisible('form[name="authEmailForm"] input[id="inlineUserPassword"]')
   if (isPasswordIncorrect) {
@@ -69,22 +69,21 @@ export async function authenticate(ctx: ContextFromState<'authenticate'>) {
 /**
  * Downloads resumes belonging to a user
  */
-export async function retrieveResumes(ctx: ContextFromState<'authenticated'>): Promise<{ resumeReadables: Readable[] }> {
+export async function retrieveResumes(
+  ctx: ContextFromState<'authenticated'>,
+): Promise<{ resumeReadables: Readable[] }> {
   const resumePage = await ctx.browser.context.newPage()
   await resumePage.goto('https://www.glassdoor.com/member/profile/resumes.htm')
 
   // wait for the lazy-loaded CV to be visible
-  await resumePage.waitForSelector('div.resume', { timeout: PLAYWRIGHT_TIMEOUT });
+  await resumePage.waitForSelector('div.resume', { timeout: PLAYWRIGHT_TIMEOUT })
 
   const resumeLinks = await resumePage.$$('div.resume div.resumeFileName > a')
-  const downloadFns = resumeLinks.map(resumeLink => () => resumeLink.click())
+  const downloadFns = resumeLinks.map((resumeLink) => () => resumeLink.click())
 
   const resumeReadables = [] as Readable[]
   for (const downloadFn of downloadFns) {
-    const [downloadResumeHandler] = await Promise.all([
-      resumePage.waitForEvent('download'),
-      downloadFn(),
-    ])
+    const [downloadResumeHandler] = await Promise.all([resumePage.waitForEvent('download'), downloadFn()])
 
     const resumeReadable = await downloadResumeHandler.createReadStream()
     if (resumeReadable) {
@@ -102,7 +101,7 @@ export async function retrieveResumes(ctx: ContextFromState<'authenticated'>): P
  */
 export async function storeResumes(
   storeReadable: (readable: Readable) => Promise<string>,
-  ctx: ContextFromState<{ 'authenticated': { 'scrape-resumes': 'retrieved-resumes' } }>,
+  ctx: ContextFromState<{ authenticated: { 'scrape-resumes': 'retrieved-resumes' } }>,
 ): Promise<{ resumeURLs: string[] }> {
   const resumeURLs = await Promise.all(ctx.resumeReadables.map(storeReadable))
   return { resumeURLs }
@@ -111,14 +110,16 @@ export async function storeResumes(
 export async function retrieveUserData(ctx: ContextFromState<'authenticated'>): Promise<{ userData: UserData }> {
   const profilePage = await ctx.browser.context.newPage()
   await profilePage.goto('https://www.glassdoor.com/member/profile/index.htm')
-  await profilePage.waitForSelector('div[data-test="profileFirstNameSection"]', { timeout: PLAYWRIGHT_TIMEOUT });
+  await profilePage.waitForSelector('div[data-test="profileFirstNameSection"]', { timeout: PLAYWRIGHT_TIMEOUT })
 
   // retrieve user full name from the "Edit" modal
   await Promise.all([
     profilePage.waitForNavigation({ timeout: PLAYWRIGHT_TIMEOUT }),
     profilePage.locator('div[data-test="profileFirstNameSection"] a').click(),
   ])
-  const userFirstName = await profilePage.inputValue('[data-test="profileModalFirstName"]', { timeout: PLAYWRIGHT_TIMEOUT })
+  const userFirstName = await profilePage.inputValue('[data-test="profileModalFirstName"]', {
+    timeout: PLAYWRIGHT_TIMEOUT,
+  })
   const userLastName = await profilePage.inputValue('[data-test="profileModalLastName"]')
   await profilePage.locator('span > svg.modal_closeIcon-svg').click()
 
