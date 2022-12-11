@@ -32,8 +32,8 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         START: {
           target: 'init-browser',
           actions: assign({
-            kind: (ctx) => 'init-browser',
-            auth: (ctx, event) => event.auth,
+            kind: (_ctx) => 'init-browser',
+            auth: (_ctx, event) => event.auth,
           }),
         },
       },
@@ -44,8 +44,8 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         onDone: {
           target: 'authenticate',
           actions: assign({
-            kind: (ctx) => 'authenticate',
-            browser: (ctx, event) => event.data,
+            kind: (_ctx) => 'authenticate',
+            browser: (_ctx, event) => event.data,
           }),
         },
         onError: {
@@ -56,7 +56,7 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         FAIL_INIT_BROWSER: {
           target: 'failure',
           actions: assign({
-            reason: (ctx, event) => 'FAIL_INIT_BROWSER',
+            reason: (_ctx) => 'FAIL_INIT_BROWSER',
           }),
         },
       },
@@ -67,8 +67,8 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         onDone: {
           target: 'authenticated',
           actions: assign({
-            kind: (ctx) => 'authenticated',
-            auth: (ctx, event) => undefined,
+            kind: (_ctx) => 'authenticated',
+            auth: (_ctx) => undefined,
           }),
         },
         onError: {
@@ -79,7 +79,7 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         FAIL_AUTHENTICATING: {
           target: 'failure',
           actions: assign({
-            reason: (ctx, event) => 'FAIL_AUTHENTICATING',
+            reason: (_ctx) => 'FAIL_AUTHENTICATING',
           }),
         },
       },
@@ -96,10 +96,10 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
                 onDone: {
                   target: 'user-data-retrieved',
                   actions: assign({
-                    kind: (ctx) => ({
-                      authenticated: 'retrieve-user-data'
+                    kind: (_ctx) => ({
+                      authenticated: 'retrieve-user-data',
                     }),
-                    userData: (ctx, event) => event.data.userData,
+                    userData: (_ctx, event) => event.data.userData,
                   }),
                 },
                 onError: {
@@ -121,12 +121,12 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
                 onDone: {
                   target: 'store-resumes',
                   actions: assign({
-                    kind: (ctx) => ({
+                    kind: (_ctx) => ({
                       authenticated: {
                         'scrape-resumes': 'retrieved-resumes',
                       },
                     }),
-                    resumeReadables: (ctx, event) => event.data.resumeReadables,
+                    resumeReadables: (_ctx, event) => event.data.resumeReadables,
                   }),
                 },
                 onError: {
@@ -140,13 +140,13 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
                 onDone: {
                   target: 'stored-resumes',
                   actions: assign({
-                    kind: (ctx) => ({
+                    kind: (_ctx) => ({
                       authenticated: {
                         'scrape-resumes': 'stored-resumes',
                       },
                     }),
-                    resumeURLs: (ctx, event) => event.data.resumeURLs,
-                    resumeReadables: (ctx) => undefined,
+                    resumeURLs: (_ctx, event) => event.data.resumeURLs,
+                    resumeReadables: (_ctx) => undefined,
                   }),
                 },
                 onError: {
@@ -164,7 +164,7 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         FAIL_RETRIEVING_USER_DATA: {
           target: 'failure',
           actions: assign({
-            reason: (ctx) => 'FAIL_RETRIEVING_USER_DATA',
+            reason: (_ctx) => 'FAIL_RETRIEVING_USER_DATA',
           }),
         },
         FAIL_RETRIEVING_RESUMES: {
@@ -173,7 +173,7 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         FAIL_STORING_RESUMES: {
           target: 'success',
           actions: assign({
-            resumeURLs: (ctx) => [],
+            resumeURLs: (_ctx) => [],
           }),
         },
       },

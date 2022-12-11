@@ -23,6 +23,8 @@ module.exports = {
         "allowTemplateLiterals": true
       }
     ],
+    'no-restricted-syntax': 'off',
+    'no-await-in-loop': 'off',
     'arrow-body-style': 'off',
     'no-shadow': 'off',
     'object-curly-newline': 'off',

@@ -9,7 +9,7 @@ const PLAYWRIGHT_TIMEOUT = 10_000
 /**
  * Initializes Playwright headless browser
  */
-export async function initializeBrowser(ctx: ContextFromState<'init-browser'>): Promise<PlaywrightBrowserData> {
+export async function initializeBrowser(_ctx: ContextFromState<'init-browser'>): Promise<PlaywrightBrowserData> {
   const instance = await firefox.launch()
   const context = await instance.newContext({
     locale: 'en-US',
@@ -40,7 +40,7 @@ export async function authenticate(ctx: ContextFromState<'authenticate'>) {
   await loginPage.fill('form[name="emailForm"] input[id="inlineUserEmail"]', ctx.auth.email)
   await Promise.all([
     loginPage.waitForLoadState('networkidle', { timeout: PLAYWRIGHT_TIMEOUT }),
-    loginPage.locator('form[name="emailForm"] button[type="submit"]').click()
+    loginPage.locator('form[name="emailForm"] button[type="submit"]').click(),
   ])
 
   // important: do not use quotes when using the text selector
@@ -62,15 +62,14 @@ export async function authenticate(ctx: ContextFromState<'authenticate'>) {
     await deferDispose()
     return Promise.reject(Error(errors.PASSWORD_INCORRECT))
   }
-  
-  await deferDispose()
-  return
+
+  return await deferDispose()
 }
 
 /**
  * Downloads resumes belonging to a user
  */
-export async function retrieveResumes(ctx: ContextFromState<'authenticated'>): Promise<{ resumeReadables: Readable[] }> {
+export async function retrieveResumes(ctx: ContextFromState<'authenticated'>): Promise<{ resumeReadables: Readable[] }> {
   const resumePage = await ctx.browser.context.newPage()
   await resumePage.goto('https://www.glassdoor.com/member/profile/resumes.htm')
 
@@ -88,7 +87,9 @@ export async function retrieveResumes(ctx: ContextFromState<'authenticated'>): P
     ])
 
     const resumeReadable = await downloadResumeHandler.createReadStream()
-    resumeReadables.push(resumeReadable!)
+    if (resumeReadable) {
+      resumeReadables.push(resumeReadable)
+    }
   }
 
   await resumePage.close()
@@ -102,7 +103,7 @@ export async function retrieveResumes(ctx: ContextFromState<'authenticated'>): P
 export async function storeResumes(
   storeReadable: (readable: Readable) => Promise<string>,
   ctx: ContextFromState<{ 'authenticated': { 'scrape-resumes': 'retrieved-resumes' } }>,
-): Promise<{ resumeURLs: string[] }> {
+): Promise<{ resumeURLs: string[] }> {
   const resumeURLs = await Promise.all(ctx.resumeReadables.map(storeReadable))
   return { resumeURLs }
 }

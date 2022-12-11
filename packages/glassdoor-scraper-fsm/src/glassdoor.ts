@@ -1,19 +1,18 @@
 import { Readable } from 'node:stream'
-import { StateMachine } from 'xstate'
 import { machine } from './machine'
 import * as glassdoor from './scrape-utils'
-import type { ContextFromState, ScraperContext, ScraperEvent, ScraperTypestate } from './types'
+import type { ContextFromState } from './types'
 
 export type GlassdoorScraperMachineConfig = {
   /**
-   * Function that stores a readable stream into a server and returns a URL to the stored resource. 
+   * Function that stores a readable stream into a server and returns a URL to the stored resource.
    */
   storeReadable: (readable: Readable) => Promise<string>
 }
 
 export function getGlassdoorScraperMachine(
   { storeReadable }: GlassdoorScraperMachineConfig,
-): StateMachine<ScraperContext, {}, ScraperEvent, ScraperTypestate> {
+) {
   return machine.withConfig({
     services: {
       initializeBrowser: (ctx) => glassdoor.initializeBrowser(ctx as ContextFromState<'init-browser'>),

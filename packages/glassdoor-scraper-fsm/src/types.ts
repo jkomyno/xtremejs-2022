@@ -21,7 +21,7 @@ export type PlaywrightBrowserData = {
 
   // the browser context, e.g., a new browser session that doesn't share cookies with other sessions.
   context: BrowserContext
-  
+
   // Function to release the resources acquired by Playwright.
   dispose: () => Promise<void>
 }
@@ -109,7 +109,7 @@ export type ScraperTypestate =
         resumeURLs: string[]
       }
     }
-  
+
   /* Final state that indicates the overall scraping pipeline was successful */
   | {
       value: 'success'
@@ -176,4 +176,3 @@ export type ScraperEvent =
   | {
     type: 'FAIL_STORING_RESUMES',
   }
-
