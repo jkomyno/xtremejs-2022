@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "@jkomyno/glassdoor-scraper-fsm",
+  "version": "0.1.0",
+  "description": "Finite state machine definition for a Glassdoor scraper",
+  "main": "lib",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "pnpm clean && tsc",
+    "prettier-check": "prettier --parser=typescript \"src/**/*.{js,ts}\" --check",
+    "prettier-write": "prettier --parser=typescript \"src/**/*.{js,ts}\" --write",
+    "typecheck": "tsc",
+    "eslint-check": "eslint \"src/**/*.{js,ts}\"",
+    "lint-staged": "lint-staged",
+    "pretest": "jest --clearCache",
+    "test": "pnpm test:ci",
+    "test:unit": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.unit.mjs",
+    "test:integration": "JEST_LIB_UNDER_TEST=cglassdoor-scraper-fsm jest -c ../jest/jest.config.integration.mjs",
+    "test:local": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.local.mjs",
+    "test:ci": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.ci.mjs --runInBand"
+  },
+  "dependencies": {
+    "@jkomyno/common-entities": "workspace:*",
+    "playwright": "^1.28.1",
+    "playwright-core": "^1.28.1",
+    "xstate": "^4.34.0"
+  }
+}

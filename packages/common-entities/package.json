@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "@jkomyno/common-entities",
+  "version": "0.1.0",
+  "description": "Library that contains common Zod entities and types",
+  "main": "lib",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "pnpm clean && tsc",
+    "prettier-check": "prettier --parser=typescript \"src/**/*.{js,ts}\" --check",
+    "prettier-write": "prettier --parser=typescript \"src/**/*.{js,ts}\" --write",
+    "typecheck": "tsc",
+    "eslint-check": "eslint \"src/**/*.{js,ts}\"",
+    "lint-staged": "lint-staged"
+  },
+  "dependencies": {
+    "zod": "^3.19.1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "@jkomyno/glassdoor-scraper",
+  "version": "0.1.0",
+  "description": "Scraper for Glassdoor.com",
+  "main": "lib",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "pnpm clean && tsc",
+    "prettier-check": "prettier --parser=typescript \"src/**/*.{js,ts}\" --check",
+    "prettier-write": "prettier --parser=typescript \"src/**/*.{js,ts}\" --write",
+    "typecheck": "tsc",
+    "eslint-check": "eslint \"src/**/*.{js,ts}\"",
+    "lint-staged": "lint-staged",
+    "pretest": "jest --clearCache"
+  },
+  "dependencies": {
+    "@jkomyno/glassdoor-scraper-fsm": "workspace:*",
+    "ts-pattern": "^4.0.6",
+    "xstate": "^4.34.0"
+  }
+}
