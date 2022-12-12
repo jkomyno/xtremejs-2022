@@ -83,3 +83,6 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test:unit
+
+      - name: Run integration tests
+        run: pnpm test:integration
