@@ -43,7 +43,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['16.14.0', '18.11.0']
+        node: ['18.11.0']
 
     name: "Build: ${{ matrix.os }}, Node.js ${{ matrix.node }}"
 
