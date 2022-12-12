@@ -14,7 +14,7 @@ import type { ScraperContext, ScraperEvent, ScraperTypestate } from './types'
  *   - `scrape-resumes`: Pipeline in which the FSM scrapes and stores user resumes.
  *     - `retrieve-resumes`: The FSM will retrieve the list of resumes and transition to `scrape-resume` when the list is ready.
  *      - On error: The FSM will transition to `failure` via the `FAIL_RETRIEVING_RESUMES` event.
- *    - `scrape-resume`: The FSM will scrape a resume and transition to `store-resume` when the resume is scraped.
+ *    - `scrape-resumes`: The FSM will scrape a resume and transition to `store-resumes` when the resume is scraped.
  *     - On error: The FSM will transition to `failure` via the `FAIL_SCRAPE_RESUME` event.
  * - `failure`: The FSM will transition to `failure` when some fatal error occurs, indicating the reason for the error.
  * - `success`: The FSM will transition to `success` when no fatal error occurs.

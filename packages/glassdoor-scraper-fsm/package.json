@@ -15,7 +15,7 @@
     "pretest": "jest --clearCache",
     "test": "pnpm test:ci",
     "test:unit": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.unit.mjs",
-    "test:integration": "JEST_LIB_UNDER_TEST=cglassdoor-scraper-fsm jest -c ../jest/jest.config.integration.mjs",
+    "test:integration": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.integration.mjs",
     "test:local": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.local.mjs",
     "test:ci": "JEST_LIB_UNDER_TEST=glassdoor-scraper-fsm jest -c ../jest/jest.config.ci.mjs --runInBand"
   },
