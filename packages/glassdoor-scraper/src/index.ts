@@ -1,82 +1,70 @@
-import { getGlassdoorScraperMachine } from '@jkomyno/glassdoor-scraper-fsm'
-import { ContextFromState } from '@jkomyno/glassdoor-scraper-fsm/lib/types'
-import { interpret } from 'xstate'
-import { waitFor } from 'xstate/lib/waitFor'
-import { match } from 'ts-pattern'
+/* eslint-disable no-multi-spaces */
+
+import process from 'node:process'
+import * as E from 'fp-ts/Either'
+import { logger } from './logger'
+import { subscribeAndScrape } from './scraper'
+import { setup } from './setup/setup'
 
 async function main() {
-  const glassdoorScraperMachine = getGlassdoorScraperMachine({
-    storeReadable: async (_readable) => {
-      // TODO: in production, store the resumes in an Object storage like S3
-      return Promise.resolve('file://resume.pdf')
-    },
-  })
+  const setupEither = await setup(process.env)()
+  if (E.isLeft(setupEither)) {
+    logger.error({ error: setupEither.left }, 'Setup error')
+    process.exit(1)
+  }
 
-  const service = interpret(glassdoorScraperMachine).onTransition((state) => {
-    console.log('Transitioning to ', state.value)
-    console.log('  context', state.context.kind)
-  })
-  const actor = service.start()
+  const {
+    config, // application configuration, read from the environment
+    kafka, // kafka producers and consumers, ready to be used
+    dispose, // function to be called when the server is shutting down
+  } = setupEither.right
 
-  const chronoStart = process.hrtime.bigint()
+  logger.info(`Starting server ${config.APP_ID}`)
 
-  /* Kick off the finite-state machine, providing authentication details */
-  service.send({
-    type: 'START',
-    auth: {
-      email: 'ravi.van.test@gmail.com',
-      password: 'ravi.van.test@gmail.com',
-    },
+  /**
+   * Handle promise rejections by treating them as uncaught exceptions.
+   */
+  process.on('unhandledRejection', <T>(unhandledRejection: Error, _: Promise<T>) => {
+    logger.error({ unhandledRejection }, 'unhandledRejection')
+
+    // send the control from 'unhandledRejection' handler to 'uncaughtException'
+    throw unhandledRejection
   })
 
   /**
-   * Wait for the machine to reach a final state, or fail with a timeout error.
+   * Handle all uncaught exceptions by attempting a graceful shutdown and forcefully
+   * exit the process.
+   * It is expected that some other service will re-attempt to spin this Node.js
+   * server instance up after the shutdown.
    */
-  const finalState = await waitFor(actor, (state) => state.matches('success') || state.matches('failure'), {
-    timeout: 60_000,
+  process.on('uncaughtException', async (uncaughtException: Error) => {
+    logger.error({ uncaughtException }, 'uncaughtException')
+
+    try {
+      await dispose()
+    } catch (error) {
+      logger.error({ error }, 'Failed to close connection to Kafka')
+    } finally {
+      process.exit(2)
+    }
   })
 
-  const chronoEnd = process.hrtime.bigint()
-  const chronoTime = Number(chronoEnd - chronoStart) / 1e6
-  console.log(`Process took ${chronoTime} ms`)
-
-  console.log('finalState.value', finalState.value)
-
-  const ctx = match(finalState)
-    .when(
-      (state) => state.value === 'success',
-      (state) => {
-        console.log('SUCCESS final state')
-        const ctx = state.context as ContextFromState<'success'>
-
-        const { browser: _, ...rest } = ctx
-        console.log('  context', rest)
-
-        return ctx
-      },
-    )
-    .when(
-      (state) => state.value === 'failure',
-      (state) => {
-        console.log('FAILURE final state')
-        const ctx = state.context as ContextFromState<'failure'>
-        return ctx
-      },
-    )
-    .otherwise((state) => {
-      console.log('UNKNOWN final state')
-      const ctx = state.context as ContextFromState<'authenticate'>
-      return ctx
+  /**
+   * Attempt a graceful shutdown when the user sends an interrupt signal to the console
+   * (e.g., Ctrl+C).
+   */
+  for (const signal of ['SIGINT', 'SIGABRT'] as const) {
+    process.once(signal, async () => {
+      logger.info({ signal }, 'Closing server after receiving signal')
+      await dispose()
+      process.exit(0)
     })
+  }
 
-  // release Playwright resources
-  await ctx.browser.dispose()
-
-  // explicitly mark the FSM as stopped
-  actor.stop()
+  /**
+   * Start long running Kafka consume-and-produce tasks.
+   */
+  await subscribeAndScrape({ config, kafka })
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+main()
