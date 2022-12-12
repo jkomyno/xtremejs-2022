@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+/**
+ * User information available from Glassdoor.
+ */
 export const UserData = z.object({
   firstname: z.string().min(1),
   lastname: z.string().min(1),

@@ -1,16 +1,8 @@
 import type { Readable } from 'node:stream'
 import type { BrowserContext, Browser } from 'playwright'
-import type { UserData } from '@jkomyno/common-entities'
+import type { UserData, UserAuth } from '@jkomyno/common-entities'
 
 export type { UserData }
-
-/**
- * Authentication credentials for Glassdoor.
- */
-export type UserAuth = {
-  email: string
-  password: string
-}
 
 /**
  * Playwright-related browser resources and destructor.
