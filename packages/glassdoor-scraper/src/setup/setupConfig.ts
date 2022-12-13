@@ -7,7 +7,8 @@ import { parseZod } from '../util/parseZod'
  * In case of parsing errors, fail early in an Either.left context.
  */
 export function setupConfig<AppConfigT extends Record<string, unknown>>(
-  AppConfig: ZodSchema<AppConfigT, ZodTypeDef, Partial<AppConfigT>>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AppConfig: ZodSchema<AppConfigT, ZodTypeDef, any>,
 ) {
   return (environment: Record<string, string | undefined>): E.Either<string, AppConfigT> =>
     parseZod(AppConfig, environment)
