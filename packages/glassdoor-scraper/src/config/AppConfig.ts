@@ -18,10 +18,7 @@ export const AppConfig = z.object({
   KAFKA_OUTPUT_FAILURE_TOPIC: z.string().min(1).default('output-success-glassdoor'),
 
   // The maximum amount of time to wait for the scraper to complete one job.
-  FSM_JOB_TIMEOUT_MS: z.preprocess(
-    (value) => parseInt((value as string) ?? '60_000', 10),
-    z.number().min(1),
-  ),
+  FSM_JOB_TIMEOUT_MS: z.preprocess((value) => parseInt((value as string) ?? '60_000', 10), z.number().min(1)),
 
   // context in which the Node.js server is run. Default: 'development'.
   NODE_ENV: z
