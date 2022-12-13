@@ -25,7 +25,7 @@ describe('glassdoor scraper', () => {
       })
   
       const successState = await waitFor(actor, (state) => state.matches('success'), {
-        timeout: 60_000,
+        timeout: 120_000,
       })
 
       const successCtx = successState.context as ContextFromState<'success'>
@@ -42,7 +42,7 @@ describe('glassdoor scraper', () => {
         currentLocation: 'Venice (Italy)'
       })
       expect(successCtx.resumeURLs).toEqual(['file://resume.pdf', 'file://resume.pdf'])
-    }, 60_000)
+    }, 120_000)
   })
 
   describe('partial happy path, storing resumes failed', () => {
@@ -61,7 +61,7 @@ describe('glassdoor scraper', () => {
       })
   
       const successState = await waitFor(actor, (state) => state.matches('success'), {
-        timeout: 60_000,
+        timeout: 120_000,
       })
 
       const successCtx = successState.context as ContextFromState<'success'>
@@ -78,7 +78,7 @@ describe('glassdoor scraper', () => {
         currentLocation: 'Venice (Italy)'
       })
       expect(successCtx.resumeURLs).toStrictEqual([])
-    }, 60_000)
+    }, 120_000)
   })
 
   describe('authenticate', () => {
