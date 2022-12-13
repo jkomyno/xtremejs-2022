@@ -12,10 +12,13 @@ import type { ScraperContext, ScraperEvent, ScraperTypestate } from './types'
  *   - `scrape-user-data`: The FSM will scrape user's information like their name and current company.
  *     - On error: The FSM will transition to `failure` via the `FAIL_RETRIEVING_USER_DATA` event.
  *   - `scrape-resumes`: Pipeline in which the FSM scrapes and stores user resumes.
- *     - `retrieve-resumes`: The FSM will retrieve the list of resumes and transition to `scrape-resume` when the list is ready.
- *      - On error: The FSM will transition to `failure` via the `FAIL_RETRIEVING_RESUMES` event.
- *    - `scrape-resumes`: The FSM will scrape a resume and transition to `store-resumes` when the resume is scraped.
- *     - On error: The FSM will transition to `failure` via the `FAIL_SCRAPE_RESUME` event.
+ *     - `retrieve-resumes`: The FSM will retrieve the list of resumes (as Readables).
+ *       - On done: Transition to `store-resumes` with the list of resumes retrieved.
+ *       - On error: The FSM will transition to `failure` via the `FAIL_RETRIEVING_RESUMES` event.
+ *     - `store-resumes`: The FSM will store the resumes somewhere (e.g., in memory or or AWS S3), returning URLs for each resume.
+ *      - On done: Transition to `stored-resumes`. 
+ *      - On error: The FSM will transition to `failed-stored-resumes` via the `FAIL_SCRAPE_RESUME` event.
+ *   - On done: transition to `success` when all parallel tasks are done (when their respective final states are reached).
  * - `failure`: The FSM will transition to `failure` when some fatal error occurs, indicating the reason for the error.
  * - `success`: The FSM will transition to `success` when no fatal error occurs.
  */
