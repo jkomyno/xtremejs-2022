@@ -31,9 +31,6 @@ describe('glassdoor scraper', () => {
       const successCtx = successState.context as ContextFromState<'success'>
       await successCtx.browser.dispose()
 
-      const { browser: _, ...ctx } = successCtx
-      console.log('ctx', ctx)
-
       expect(successCtx.userData).toMatchObject({
         firstname: 'Alberto',
         lastname: 'Schiabel',

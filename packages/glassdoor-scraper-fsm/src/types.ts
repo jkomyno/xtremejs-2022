@@ -102,6 +102,19 @@ export type ScraperTypestate =
       }
     }
 
+  /* State that indicates the resume storing service failed (which is acceptable) */
+  | {
+      value: {
+        authenticated: {
+          'scrape-resumes': 'failed-stored-resumes'
+        }
+      }
+      context: ScraperContext & {
+        browser: PlaywrightBrowserData
+        resumeURLs: string[]
+      }
+    }
+
   /* Final state that indicates the overall scraping pipeline was successful */
   | {
       value: 'success'
@@ -169,5 +182,6 @@ export type ScraperEvent =
       data: { resumeURLs: string[] }
     }
   | {
-      type: 'FAIL_STORING_RESUMES'
+      type: 'error.platform.scraper.authenticated.scrape-resumes.store-resumes:invocation[0]'
+      data: { resumeURLs: string[] }
     }

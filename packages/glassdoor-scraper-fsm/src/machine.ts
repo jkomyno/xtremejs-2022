@@ -150,11 +150,22 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
                   }),
                 },
                 onError: {
-                  actions: send('FAIL_STORING_RESUMES'),
+                  target: 'failed-stored-resumes',
+                  actions: assign({
+                    kind: (_ctx, event) => ({
+                      authenticated: {
+                        'scrape-resumes': 'failed-stored-resumes',
+                      },
+                    }),
+                    resumeURLs: (_ctx) => [],
+                  }),
                 },
               },
             },
             'stored-resumes': {
+              type: 'final',
+            },
+            'failed-stored-resumes': {
               type: 'final',
             },
           },
@@ -169,12 +180,6 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
         },
         FAIL_RETRIEVING_RESUMES: {
           target: 'success',
-        },
-        FAIL_STORING_RESUMES: {
-          target: 'success',
-          actions: assign({
-            resumeURLs: (_ctx) => [],
-          }),
         },
       },
       onDone: {

@@ -91,10 +91,10 @@ describe('scraper', () => {
     const retrievedResumesState = machine.transition(authenticatedState, { type: 'done.invoke.scraper.authenticated.scrape-resumes.retrieve-resumes:invocation[0]', data: { resumeReadables: [] as Readable[] } })
     expect(retrievedResumesState.matches('authenticated')).toBe(true)
 
-    const retrievedUserDataState = machine.transition(retrievedResumesState, { type: 'done.invoke.scraper.authenticated.scrape-user-data.retrieve-user-data:invocation[0]', data: { userData: {} as UserData } })
-    expect(retrievedUserDataState.matches('authenticated')).toBe(true)
+    const storedResumesState = machine.transition(retrievedResumesState, { type: 'error.platform.scraper.authenticated.scrape-resumes.store-resumes:invocation[0]', data: { resumeURLs: [] as string[] } })
+    expect(storedResumesState.matches('authenticated')).toBe(true)
 
-    const storedResumesState = machine.transition(retrievedUserDataState, { type: 'FAIL_STORING_RESUMES' })
-    expect(storedResumesState.matches('success')).toBe(true)
+    const retrievedUserDataState = machine.transition(storedResumesState, { type: 'done.invoke.scraper.authenticated.scrape-user-data.retrieve-user-data:invocation[0]', data: { userData: {} as UserData } })
+    expect(retrievedUserDataState.matches('success')).toBe(true)
   })
 })
