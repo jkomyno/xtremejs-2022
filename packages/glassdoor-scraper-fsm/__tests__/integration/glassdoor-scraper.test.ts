@@ -31,12 +31,15 @@ describe('glassdoor scraper', () => {
       const successCtx = successState.context as ContextFromState<'success'>
       await successCtx.browser.dispose()
 
+      const { browser: _, ...ctx } = successCtx
+      console.log('ctx', ctx)
+
       expect(successCtx.userData).toMatchObject({
-        firstname: 'Wholesome',
-        lastname: 'Catto',
-        jobTitle: 'MyCompanysdasdsa',
-        currentCompany: 'Xtreme',
-        currentLocation: 'London, England (UK)'
+        firstname: 'Alberto',
+        lastname: 'Schiabel',
+        jobTitle: 'Open Source Software Engineer',
+        currentCompany: 'Prisma.io',
+        currentLocation: 'Venice (Italy)'
       })
       expect(successCtx.resumeURLs).toEqual(['file://resume.pdf', 'file://resume.pdf'])
     }, 60_000)
@@ -64,12 +67,15 @@ describe('glassdoor scraper', () => {
       const successCtx = successState.context as ContextFromState<'success'>
       await successCtx.browser.dispose()
 
+      const { browser: _, ...ctx } = successCtx
+      console.log('ctx', ctx)
+
       expect(successCtx.userData).toMatchObject({
-        firstname: 'Wholesome',
-        lastname: 'Catto',
-        jobTitle: 'MyCompanysdasdsa',
-        currentCompany: 'Xtreme',
-        currentLocation: 'London, England (UK)'
+        firstname: 'Alberto',
+        lastname: 'Schiabel',
+        jobTitle: 'Open Source Software Engineer',
+        currentCompany: 'Prisma.io',
+        currentLocation: 'Venice (Italy)'
       })
       expect(successCtx.resumeURLs).toStrictEqual([])
     }, 60_000)
