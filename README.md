@@ -4,6 +4,8 @@
 
 > Accompanying code for my talk at [XtremeJS 2022](https://xtremejs.dev/2022/schedule/).
 
+Slides for this talk are also available [here](https://jkomyno-xtremejs-2022.vercel.app).
+
 ---------------------------------------------
 
 ## What this is about
@@ -62,7 +64,7 @@ The packages are the following:
     - Run
 
         ```sh
-        docker-compose up -f docker/docker-compose.yml up
+        docker-compose -f docker/docker-compose.yml up
         ```
 
     This step will start a Kafka and a Zookeeper instance, as well as a Kafka UI tool.
