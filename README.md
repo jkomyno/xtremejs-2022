@@ -5,6 +5,7 @@
 > Accompanying code for my talk at [XtremeJS 2022](https://xtremejs.dev/2022/schedule/).
 
 Slides for this talk are also available [here](https://jkomyno-xtremejs-2022.vercel.app).
+A video of me running the demo is available [here](https://www.loom.com/share/ad141b76eff74064baf1437be58e6f24), as well as a brief discussion of the tests [here](https://www.loom.com/share/994db06c61744b5a836406c2206af91f).
 
 ---------------------------------------------
 
@@ -95,6 +96,8 @@ The packages are the following:
         echo $KAFKA_BROKER_LIST
         ```
 ## Demo
+
+Too busy to run the demo yourself? You can **watch a video** of it [here](https://www.loom.com/share/ad141b76eff74064baf1437be58e6f24).
 
 1. **Start the Glassdoor scraper**
     - Run:
