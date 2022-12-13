@@ -1,3 +1,5 @@
+/* eslint-disable no-trailing-spaces */
+
 import { send, assign, createMachine } from 'xstate'
 import type { ScraperContext, ScraperEvent, ScraperTypestate } from './types'
 
@@ -16,7 +18,7 @@ import type { ScraperContext, ScraperEvent, ScraperTypestate } from './types'
  *       - On done: Transition to `store-resumes` with the list of resumes retrieved.
  *       - On error: The FSM will transition to `failure` via the `FAIL_RETRIEVING_RESUMES` event.
  *     - `store-resumes`: The FSM will store the resumes somewhere (e.g., in memory or or AWS S3), returning URLs for each resume.
- *      - On done: Transition to `stored-resumes`. 
+ *      - On done: Transition to `stored-resumes`.
  *      - On error: The FSM will transition to `failed-stored-resumes` via the `FAIL_SCRAPE_RESUME` event.
  *   - On done: transition to `success` when all parallel tasks are done (when their respective final states are reached).
  * - `failure`: The FSM will transition to `failure` when some fatal error occurs, indicating the reason for the error.
@@ -155,7 +157,7 @@ export const machine = createMachine<ScraperContext, ScraperEvent, ScraperTypest
                 onError: {
                   target: 'failed-stored-resumes',
                   actions: assign({
-                    kind: (_ctx, event) => ({
+                    kind: (_ctx, _event) => ({
                       authenticated: {
                         'scrape-resumes': 'failed-stored-resumes',
                       },
