@@ -1,6 +1,6 @@
 import { Readable } from 'node:stream'
 import { machine } from '../../src/machine'
-import type { ContextFromState, PlaywrightBrowserData, UserData } from '../../src/types'
+import type { PlaywrightBrowserData, UserData } from '../../src/types'
 
 describe('scraper', () => {
   const auth = {

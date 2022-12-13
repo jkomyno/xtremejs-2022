@@ -27,7 +27,6 @@ describe('glassdoor scraper', () => {
       const finalState = await waitFor(actor, (state) => state.matches('success') || state.matches('failure'), {
         timeout: 120_000,
       })
-      console.log('finalState.value', finalState.value)
       expect(finalState.matches('success')).toBe(true)
 
       const successCtx = finalState.context as ContextFromState<'success'>
@@ -62,14 +61,10 @@ describe('glassdoor scraper', () => {
       const finalState = await waitFor(actor, (state) => state.matches('success') || state.matches('failure'), {
         timeout: 120_000,
       })
-      console.log('finalState.value', finalState.value)
       expect(finalState.matches('success')).toBe(true)
 
       const successCtx = finalState.context as ContextFromState<'success'>
       await successCtx.browser.dispose()
-
-      const { browser: _, ...ctx } = successCtx
-      console.log('ctx', ctx)
 
       expect(successCtx.userData).toMatchObject({
         firstname: 'Alberto',
